@@ -3,7 +3,8 @@ package org.plt.guiworld;
 import org.plt.world.WorldTransformer;
 
 public class BoxGroup implements Gui {
-
+	
+	// converts world into the label of BoxGroup
 	private WorldTransformer valF;
 
 	private Gui gui;

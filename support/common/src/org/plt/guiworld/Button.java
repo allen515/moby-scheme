@@ -3,9 +3,9 @@ package org.plt.guiworld;
 import org.plt.world.WorldTransformer;
 
 public class Button implements Gui {
-    // Fill me in
-
+	// converts world into the label value of Button
     private WorldTransformer valF;
+    // converts world into a new world
     private WorldTransformer callback;
 
 
