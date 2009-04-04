@@ -24,13 +24,13 @@
 
 
 (define a-form
-`(form ((enctype "multipart/form-data")
-        (method "post"))
-       (input ((type "file")
-               (name "datafile")
-               (size "40")))
-       (input ((type "submit")
-               (value "Send")))))
+  `(form ((enctype "multipart/form-data")
+          (method "post"))
+         (input ((type "file")
+                 (name "datafile")
+                 (size "40")))
+         (input ((type "submit")
+                 (value "Send")))))
 
 
 ;; start: request -> response
@@ -63,22 +63,26 @@
                  (extract-binding/single 'email
                                          (request-bindings a-request))])
             (cond 
-              [(and (sendmail-available?) 
-                    (good-email-address? email-address))
-               (thread (lambda ()
-                         (let ([result-binary 
-                                (compile-file (bytes->string/utf-8 filename)
-                                              content
-                                              email-address)])
-                           (send-email-notification email-address
-                                                    (binary-id result-binary)))))
-               (we-will-call-you-response a-request email-address)]
+              [(if (and (sendmail-available?) 
+                        (good-email-address? email-address))
+                   (begin
+                     (thread (lambda ()
+                               (let ([result-binary 
+                                      (compile-file (bytes->string/utf-8 filename)
+                                                    content
+                                                    email-address)])
+                                 (send-email-notification email-address
+                                                          (binary-id result-binary)))))
+                     (we-will-call-you-response a-request email-address))
+                   (make-bootstrap-response 
+                    (list
+                     `(p "Invalid email address: " ,email-address ))))]  
               [else
                (let* ([a-request (redirect/get/forget)]
                       [result-binary 
-                      (compile-file (bytes->string/utf-8 filename)
-                                    content
-                                    email-address)])
+                       (compile-file (bytes->string/utf-8 filename)
+                                     content
+                                     email-address)])
                  (here-is-the-download-link-response 
                   a-request
                   (binary-id result-binary)))]))]
@@ -117,7 +121,7 @@
                                     #:to (list email-address))])
     (display "Your download is available at: " op)
     (display (string-append request-base-path "get/" binary-id)
-           op)
+             op)
     (close-output-port op)))
 
 
@@ -127,8 +131,6 @@
   (let ([a-binary
          (model-find-binary model id)])
     (make-binary-response a-binary)))
-
-
 
 
 ;; compile-file: string bytes string -> binary
@@ -145,7 +147,6 @@
                                     user)]
          [binary (model-compile-source! model source android)])
     binary))
-
 
 
 ;; make-binary-response: binary -> response
@@ -169,7 +170,7 @@
                           (style "margin: 0px 35px 0px 20px")))
                     (img ((src "/images/logo.png")
                           (id "logo"))))
-
+               
                (div ((id "sidebar"))
                     (ul
                      (li (a ((href "/")) "Compiler"))
