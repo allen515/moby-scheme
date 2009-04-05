@@ -47,8 +47,9 @@
 
 ;; good-email-address
 (define (good-email-address? an-email)
-  (regexp-match #rx"^.*@.*$" an-email))
-
+  (if (regexp-match #rx"^.*@.*$" an-email)
+      true
+      (raise-user-error "bad email address")))
 
 ;; handle-compile: request -> response
 (define (handle-compile a-request)
@@ -62,30 +63,30 @@
           (let ([email-address
                  (extract-binding/single 'email
                                          (request-bindings a-request))])
-            (cond 
-              [(if (and (sendmail-available?) 
-                        (good-email-address? email-address))
-                   (begin
-                     (thread (lambda ()
-                               (let ([result-binary 
-                                      (compile-file (bytes->string/utf-8 filename)
-                                                    content
-                                                    email-address)])
-                                 (send-email-notification email-address
-                                                          (binary-id result-binary)))))
-                     (we-will-call-you-response a-request email-address))
-                   (make-bootstrap-response 
-                    (list
-                     `(p "Invalid email address: " ,email-address ))))]  
-              [else
-               (let* ([a-request (redirect/get/forget)]
-                      [result-binary 
-                       (compile-file (bytes->string/utf-8 filename)
-                                     content
-                                     email-address)])
-                 (here-is-the-download-link-response 
-                  a-request
-                  (binary-id result-binary)))]))]
+            (with-handlers ([exn:fail:user? (lambda (exn) 
+                                              (make-bootstrap-response
+                                               (list
+                                                `(p "Invalid email address: " ,email-address ))))])
+              (begin
+                (sendmail-available?)
+                (good-email-address? email-address)
+                (begin
+                  (thread (lambda ()
+                            (let ([result-binary 
+                                   (compile-file (bytes->string/utf-8 filename)
+                                                 content
+                                                 email-address)])
+                              (send-email-notification email-address
+                                                       (binary-id result-binary)))))
+                  (we-will-call-you-response a-request email-address))
+                (let* ([a-request (redirect/get/forget)]
+                       [result-binary 
+                        (compile-file (bytes->string/utf-8 filename)
+                                      content
+                                      email-address)])
+                  (here-is-the-download-link-response 
+                   a-request
+                   (binary-id result-binary))))))]
          [else
           (error 'start "Not a file: ~s" a-file-binding)]))]
     [else
