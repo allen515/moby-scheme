@@ -66,7 +66,12 @@
             (with-handlers ([exn:fail:user? (lambda (exn) 
                                               (make-bootstrap-response
                                                (list
-                                                `(p "Invalid email address: " ,email-address ))))])
+                                                `(p "Invalid email address: " ,email-address ))))]
+                            [(lambda (v) #t) (lambda (exn)
+                                               (make-bootstrap-response
+                                                (list
+                                                 `(p "An error occured in compiling your program!") 
+                                                 `(p "Detailed error messsage will be sent to: " ,email-address ))))])
               (begin
                 (sendmail-available?)
                 (good-email-address? email-address)
