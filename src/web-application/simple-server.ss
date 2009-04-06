@@ -49,7 +49,7 @@
 (define (good-email-address? an-email)
   (if (regexp-match #rx"^.*@.*(com|edu|org|net|gov|mil|cn)" an-email)
       true
-      (raise-user-error "bad email address")))
+      (error "bad email address")))
 
 ;; handle-compile: request -> response
 (define (handle-compile a-request)
@@ -62,16 +62,17 @@
          [(struct binding:file (id filename headers content))
           (let ([email-address
                  (extract-binding/single 'email
-                                         (request-bindings a-request))])
-            (with-handlers ([exn:fail:user? (lambda (exn) 
-                                              (make-bootstrap-response
-                                               (list
-                                                `(p "Invalid email address: " ,email-address ))))]
-                            [(lambda (v) #t) (lambda (exn)
-                                               (make-bootstrap-response
-                                                (list
-                                                 `(p "An error occured in compiling your program!") 
-                                                 `(p "Detailed error messsage will be sent to: " ,email-address ))))])
+                                         (request-bindings a-request))])            
+            (with-handlers ([exn:fail? 
+                             (lambda (exn)
+                               (match (exn-message exn)
+                                 ["bad email address" (make-bootstrap-response
+                                                       (list
+                                                        `(p "Invalid email address: " ,email-address )))]
+                                 [_ (make-bootstrap-response
+                                     (list
+                                      `(p "An error occured in compiling your program!") 
+                                      `(p "Detailed error messsage will be sent to: " ,email-address )))]))])
               (begin
                 (sendmail-available?)
                 (good-email-address? email-address)
