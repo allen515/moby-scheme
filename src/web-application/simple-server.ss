@@ -47,7 +47,7 @@
 
 ;; good-email-address
 (define (good-email-address? an-email)
-  (if (regexp-match #rx"^.*@.*(com|org|net|gov|mil|cn)" an-email)
+  (if (regexp-match #rx"^.*@.*(com|edu|org|net|gov|mil|cn)" an-email)
       true
       (raise-user-error "bad email address")))
 
