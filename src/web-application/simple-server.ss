@@ -47,7 +47,7 @@
 
 ;; good-email-address
 (define (good-email-address? an-email)
-  (if (regexp-match #rx"^.*@.*$" an-email)
+  (if (regexp-match #rx"^.*@.*(com|org|net|gov|mil|cn)" an-email)
       true
       (raise-user-error "bad email address")))
 
@@ -132,6 +132,8 @@
   (let ([a-binary
          (model-find-binary model id)])
     (make-binary-response a-binary)))
+
+
 
 
 ;; compile-file: string bytes string -> binary
