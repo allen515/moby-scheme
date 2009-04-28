@@ -11,6 +11,7 @@ import android.location.Criteria;
 import android.os.Bundle;
 import android.os.HandlerThread;
 import android.os.Looper;
+import android.net.Uri;
 
 import android.telephony.gsm.SmsManager;
 
@@ -22,6 +23,7 @@ import org.plt.lib.LocationService;
 import org.plt.lib.TiltService;
 import org.plt.lib.SmsService;
 import org.plt.lib.NetworkService;
+import org.plt.lib.IntentService;
 
 import org.plt.types.*;
 
@@ -63,6 +65,30 @@ public class AndroidPlatform implements PlatformI {
 
     static private LocationService locationService;
     static private TiltService tiltService;
+	static private IntentService intentService;
+	
+	private class AndroidIntentService implements IntentService{
+		private String action;
+		private String data;
+		
+		private AndroidIntentService(String action, String data){
+			this.action = action;
+			this.data = data;
+		}
+		
+		public IntentService getIntentService(String action, String data){
+			if (intentService == null)
+				intentService = new AndroidIntentService(action, data);
+			return intentService;
+		}
+		
+		public void exec(Object executor){
+			Activity exec = (Activity) executor;
+			Uri uri = Uri.parse(data);
+			android.content.Intent i = new android.content.Intent(action, uri);
+			exec.startActivity(i);
+		}
+	}
 
 
 
