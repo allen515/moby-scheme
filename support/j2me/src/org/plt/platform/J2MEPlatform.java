@@ -4,6 +4,7 @@ import org.plt.lib.LocationService;
 import org.plt.lib.TiltService;
 import org.plt.lib.SmsService;
 import org.plt.lib.NetworkService;
+import org.plt.lib.IntentService;
 
 import org.plt.types.*;
 
@@ -16,6 +17,10 @@ public class J2MEPlatform implements PlatformI {
     public String getName() {
 	return "J2ME";
     }
+
+	public IntentService getIntentService(String action, String data){
+		throw new RuntimeException("method to implement");
+	}
 
 
     public TiltService getTiltService() {

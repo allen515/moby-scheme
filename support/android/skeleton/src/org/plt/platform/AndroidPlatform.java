@@ -65,7 +65,13 @@ public class AndroidPlatform implements PlatformI {
 
     static private LocationService locationService;
     static private TiltService tiltService;
-	static private IntentService intentService;
+	static private IntentService intentService;	
+	
+	public IntentService getIntentService(String action, String data){
+		if (intentService == null)
+			intentService = new AndroidIntentService(action, data);
+		return intentService;
+	}
 	
 	private class AndroidIntentService implements IntentService{
 		private String action;
@@ -76,13 +82,7 @@ public class AndroidPlatform implements PlatformI {
 			this.data = data;
 		}
 		
-		public IntentService getIntentService(String action, String data){
-			if (intentService == null)
-				intentService = new AndroidIntentService(action, data);
-			return intentService;
-		}
-		
-		public void exec(Object executor){
+		public void startIntent(Object executor){
 			Activity exec = (Activity) executor;
 			Uri uri = Uri.parse(data);
 			android.content.Intent i = new android.content.Intent(action, uri);
