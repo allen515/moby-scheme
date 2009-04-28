@@ -1,5 +1,5 @@
 package org.plt.lib;
 
 public interface IntentService {
-	void startIntent(Object exec);
+	void executeIntent(String action, String data);
 }

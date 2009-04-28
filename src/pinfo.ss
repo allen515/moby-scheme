@@ -457,25 +457,24 @@
                                                       "org.plt.lib.Sms.sendTextMessage"
                                                       (list PERMISSION:SMS))))))
 
+(define intent-module
+  (let ([module-path
+         (resolve-module-path 
+          '(lib "intent.ss" "moby" "stub") #f)])
+    (make-module-binding 'intent
+                         module-path
+                         (list (make-binding:function 'execute-intent
+                                                      module-path 
+                                                      2 
+                                                      #f 
+                                                      "org.plt.lib.Intent.executeIntent"
+                                                      (list))))))
 
 (define net-module
   (let ([module-path
          (resolve-module-path 
           '(lib "net.ss" "moby" "stub") #f)])
     (make-module-binding 'net
-                         module-path
-                         (list (make-binding:function 'get-intent
-                                                      module-path 
-                                                      1 
-                                                      #f 
-                                                      "org.plt.lib.Intent.getIntent"
-                                                      (list PERMISSION:INTERNET))))))
-
-(define intent-module
-  (let ([module-path
-         (resolve-module-path 
-          '(lib "intent.ss" "moby" "stub") #f)])
-    (make-module-binding 'intent
                          module-path
                          (list (make-binding:function 'get-url
                                                       module-path 
