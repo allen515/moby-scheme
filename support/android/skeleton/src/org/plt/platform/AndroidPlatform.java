@@ -82,12 +82,11 @@ public class AndroidPlatform implements PlatformI {
 			this.data = data;
 		}
 		
-		public void executeIntent(String action, String data){
-			if (activity == null)
-				throw new RuntimeException("Activity not known!");
-			Uri uri = Uri.parse(data);
+		public Object executeIntent(String action, Object data){
+			Uri uri = Uri.parse((String)data);
 			android.content.Intent i = new android.content.Intent(action, uri);
 			activity.startActivity(i);
+			return data;
 		}		
 	}
 

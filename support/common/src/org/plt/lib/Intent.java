@@ -4,8 +4,9 @@ import org.plt.types.*;
 import org.plt.platform.Platform;
 
 public class Intent {	
-	public static void executeIntent(String action, String data){
-		IntentService service = Platform.getInstance().getIntentService(action, data);
-		service.executeIntent(action, data);
+	public static Object executeIntent(String action, Object data){
+		IntentService service = Platform.getInstance().getIntentService(action, (String)data);
+		service.executeIntent(action, (String)data);
+		return data;
 	}
 }
