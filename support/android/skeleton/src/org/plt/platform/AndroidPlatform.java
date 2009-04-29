@@ -83,6 +83,10 @@ public class AndroidPlatform implements PlatformI {
 		}
 		
 		public Object executeIntent(String action, Object data){
+			if (activity == null)
+				System.out.println("No activityyyyyyyyyyyyyy!");
+			else
+				System.out.println("Activity exists");
 			Uri uri = Uri.parse((String)data);
 			android.content.Intent i = new android.content.Intent(action, uri);
 			activity.startActivity(i);
