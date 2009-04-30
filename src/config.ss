@@ -10,11 +10,11 @@
 
 ;; current-android-sdk-path: (parameterof path)
 ;; Where the Google Android SDK is installed.
-(define current-android-sdk-path (make-parameter (build-path "/home/zhe/sdk/android-sdk-linux_x86-1.1_r1")))
+(define current-android-sdk-path (make-parameter (build-path "/Users/zhezhang/sdk/android-sdk-mac_x86-1.1_r1")))
 
 ;; current-android-sdk-tools-path: (parameterof path)
 ;; Where the Google Android SDK tools are installed.
-(define current-android-sdk-tools-path (make-parameter (build-path "/home/zhe/sdk/android-sdk-linux_x86-1.1_r1/tools")))
+(define current-android-sdk-tools-path (make-parameter (build-path "/Users/zhezhang/sdk/android-sdk-mac_x86-1.1_r1/tools")))
 
 ;; current-has-android-sdk?: (parameterof boolean)
 ;; If you don't have the Android SDK, set this to false.
