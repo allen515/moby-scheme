@@ -889,6 +889,17 @@
 		
 		this.assert(Kernel.equal_question_(Kernel.gcd(n4, n6, []), n2));
 		this.assert(Kernel.equal_question_(Kernel.gcd(n4, n6, [Rational.ONE]), Rational.ONE)); 
+	},
+	
+	testLcm : function(){
+		var n2 = Rational.makeInstance(2,1);
+		var n3 = Rational.makeInstance(3,1);
+		var n4 = Rational.makeInstance(4,1);
+		var n6 = Rational.makeInstance(6,1);
+		var n12 = Rational.makeInstance(12,1);
+	
+		this.assert(Kernel.equal_question_(Kernel.lcm(n2, n3, []), n6));
+		this.assert(Kernel.equal_question_(Kernel.lcm(n2, n3, [n4]), n12));
 	}
 	
   }); 

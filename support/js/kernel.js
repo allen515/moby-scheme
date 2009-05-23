@@ -870,6 +870,14 @@ org.plt = {};
 	return org.plt.types.Rational.makeInstance(ret, 1);
   },
   
+  lcm : function(first, second, rest){
+	var ret = lcm(first.toInteger(), second.toInteger());
+	var i = 0;
+	for (; i < rest.length; i++)
+		ret = lcm(ret, rest[i].toInteger());
+	return org.plt.types.Rational.makeInstance(ret, 1);
+  },
+  
   HEREEEEEEEEEEEEEEEEE : function(){}
 	
   };
@@ -1043,6 +1051,10 @@ org.plt = {};
   }
   return a;
     }
+	
+	function lcm(a, b){
+		return a * b / gcd(a,b);
+	}
  
     org.plt.types.Rational = function(n, d) {
   var divisor = gcd(Math.abs(n), Math.abs(d));
