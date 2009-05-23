@@ -844,7 +844,22 @@ org.plt = {};
   },
  
   inexact_question_ : function(x){
-	return !exact_question_(x);
+	return !(Kernel.exact_question_(x));
+  },
+  
+  exact_dash__greaterthan_inexact : function(x){
+	if (Kernel.inexact_question_(x))
+		return x;
+	// if x is a complex, then both its real part and imagine part are not rational
+	if (x instanceof org.plt.types.FloatPoint)
+		return org.plt.types.Rational.makeInstance(x.toInteger(), 1);
+  },
+  
+  inexact_dash__greaterthan_exact : function(x){
+	if (Kernel.exact_question_(x))
+		return x;
+	if (x instanceof org.plt.types.Rational)
+		return org.plt.types.FloatPoint.makeInstance(x.n / x.d);
   },
   
   HEREEEEEEEEEEEEEEEEE : function(){}
