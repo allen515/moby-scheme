@@ -821,6 +821,12 @@ org.plt = {};
 	throw new Error("program exited");
   },
   
+  equal_tilde__question_ : function(x, y, delta){
+	if (Kernel.real_question_(x) && Kernel.real_question_(y))
+		return Kernel._equal__tilde_(x, y, delta);
+	return Kernel.equal_question_(x, y);
+  },
+  
   HEREEEEEEEEEEEEEEEEE : function(){}
 	
   };
