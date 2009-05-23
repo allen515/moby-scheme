@@ -156,6 +156,29 @@
 		this.assert(Kernel._greaterthan_(FloatPoint.makeInstance(2.1), Rational.makeInstance(2,1), []));
 		this.assert(Kernel._greaterthan__equal_(FloatPoint.makeInstance(2.0), Rational.makeInstance(2,1), []));
 		this.assert(Kernel._greaterthan__equal_(Complex.makeInstance(2.0, 0), Rational.makeInstance(2,1), []));
+		
+		var num = Rational.makeInstance(0, 1);
+         var upper = Rational.makeInstance(480, 1);
+		 
+         this.assert(Kernel._lessthan_(Rational.makeInstance(5, 1),upper,[]));
+		 
+         this.assert(Kernel._lessthan_(Rational.makeInstance(6, 1),
+                                       upper, []));
+         this.assert(Kernel._lessthan_(Rational.makeInstance(7, 1),
+                                       upper, []));
+         this.assert(Kernel._lessthan_(Rational.makeInstance(8, 1),
+                                       upper, []));
+         this.assert(Kernel._lessthan_(Rational.makeInstance(9, 1),
+                                       upper, []));
+		 
+
+         for (var i = 0; i < 60; i++) {
+            console.log(num + ": " + Kernel._lessthan_
+                        (num, upper, []));
+             this.assert(Kernel._lessthan_
+                         (num, upper, []));
+             num = Kernel._plus_([num, Rational.ONE]);
+         }
 	},
 	
 	testAtan : function(){
@@ -840,7 +863,7 @@
 		Kernel.equal_question_(lst.first(), Char.makeInstance("h"));
 		lst = lst.rest();
 		Kernel.equal_question_(lst.first(), Char.makeInstance("e"));
-	}	
+	}, 
 	
   }); 
   

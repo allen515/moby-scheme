@@ -818,6 +818,10 @@ org.plt = {};
 	return ret;
   },
   
+  exit : function(){
+	throw new Error("program exited");
+  },
+  
   HEREEEEEEEEEEEEEEEEE : function(){}
 	
   };
@@ -1260,6 +1264,14 @@ org.plt = {};
     org.plt.types.FloatPoint.prototype.greaterThanOrEqual = function(other) {
   return this.n >= other.n;
     };
+	
+	org.plt.types.FloatPoint.prototype.greaterThan = function(other){
+		return this.n > other.n;
+	};
+	
+	org.plt.types.FloatPoint.prototype.lessThanOrEqual = function(other){
+		return this.n <= other.n;
+	};
  
     org.plt.types.FloatPoint.prototype.lessThan = function(other) {
   return this.n < other.n;
@@ -1630,7 +1642,7 @@ org.plt = {};
 		y = y.toComplex();
 		if (!(x.isReal() && y.isReal()))
 			throw new Error("greaterThanOrEqual: couldn't be applied to complex number");
-		return x.r >= y.r;
+		return x.r.greaterThanOrEqual(y.r);
 	};
 	
 	org.plt.types.NumberTower.lessThanOrEqual = function(x, y){
@@ -1638,7 +1650,7 @@ org.plt = {};
 		y = y.toComplex();
 		if (!(x.isReal() && y.isReal()))
 			throw new Error("lessThanOrEqual: couldn't be applied to complex number");
-		return x.r <= y.r;
+		return x.r.lessThanOrEqual(y.r);
 	};
 	
 	org.plt.types.NumberTower.greaterThan = function(x, y){
@@ -1647,8 +1659,7 @@ org.plt = {};
 		
 		if (!(x.isReal() && y.isReal()))
 			throw new Error("greaterThan: couldn't be applied to complex number");
-		return x.r > y.r;
-		
+		return x.r.greaterThan(y.r);
 	};
 	
 	org.plt.types.NumberTower.lessThan = function(x, y){
@@ -1656,7 +1667,7 @@ org.plt = {};
 		y = y.toComplex();
 		if (!(x.isReal() && y.isReal()))
 			throw new Error("lessThan: couldn't be applied to complex number");
-		return x.r < y.r;
+		return x.r.lessThan(y.r);
 	};
  
     org.plt.types.NumberTower.modulo = function(m, n) {
