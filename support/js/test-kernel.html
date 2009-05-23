@@ -880,6 +880,15 @@
 	testExact_question_ : function(){
 		this.assert(Kernel.exact_question_(Rational.ONE));
 		this.assert(!Kernel.exact_question_(FloatPoint.makeInstance(1.1)));
+	},
+	
+	testGcd : function(){
+		var n4 = Rational.makeInstance(4,1);
+		var n6 = Rational.makeInstance(6,1);
+		var n2 = Rational.makeInstance(2, 1);
+		
+		this.assert(Kernel.equal_question_(Kernel.gcd(n4, n6, []), n2));
+		this.assert(Kernel.equal_question_(Kernel.gcd(n4, n6, [Rational.ONE]), Rational.ONE)); 
 	}
 	
   }); 

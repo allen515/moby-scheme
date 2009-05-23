@@ -862,6 +862,14 @@ org.plt = {};
 		return org.plt.types.FloatPoint.makeInstance(x.n / x.d);
   },
   
+  gcd : function(first, second, rest){
+	var ret = gcd(first.toInteger(), second.toInteger());
+	var i = 0;
+	for (; i < rest.length; i++)
+		ret = gcd(ret, rest[i].toInteger());
+	return org.plt.types.Rational.makeInstance(ret, 1);
+  },
+  
   HEREEEEEEEEEEEEEEEEE : function(){}
 	
   };
