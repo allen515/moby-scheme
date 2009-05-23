@@ -145,7 +145,6 @@ org.plt = {};
  
  
   _equal__tilde_ : function(x, y, delta) {
-      // FIXME: check against other args too.
       return org.plt.types.NumberTower.approxEqual(x, y, delta);
   },
  
@@ -1633,8 +1632,11 @@ org.plt = {};
     };
  
     org.plt.types.NumberTower.approxEqual = function(x, y, delta) {
-  // fixme: use delta
-  return x.isEqual(y);
+  
+	var diff = org.plt.types.NumberTower.subtract(x, y);
+	var diffAbs = org.plt.types.NumberTower.abs(diff);
+  
+	return org.plt.types.NumberTower.lessThanOrEqual(x, delta);
     };
 	
 	org.plt.types.NumberTower.greaterThanOrEqual = function(x, y){

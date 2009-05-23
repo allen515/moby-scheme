@@ -865,6 +865,13 @@
 		Kernel.equal_question_(lst.first(), Char.makeInstance("e"));
 	}, 
 	
+	testEqual__tilde_ : function(){
+		this.assert(Kernel._equal__tilde_(Rational.ZERO, Rational.ONE, FloatPoint.makeInstance(1.01)));
+		this.assert(Kernel._equal__tilde_(Rational.ZERO, Rational.ONE, Rational.ONE));
+		this.assert(Kernel._equal__tilde_(Rational.ONE, Rational.ZERO, Rational.ONE));
+		this.assert(!Kernel._equal__tilde_(Rational.ONE, Rational.ZERO, FloatPoint.makeInstance(0.99)));
+	}
+	
   }); 
   
 // ]]>
