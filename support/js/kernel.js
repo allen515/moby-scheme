@@ -827,6 +827,26 @@ org.plt = {};
 	return Kernel.equal_question_(x, y);
   },
   
+  rational_question_ : function(x){
+	if (x instanceof org.plt.types.Rational)
+		return true;
+	if (x instanceof org.plt.types.Complex && Kernel.real_question_(x) && Kernel.rational_question_(Kernel.real_dash_part(x)))
+		return true;
+	return false;
+  },
+  
+  exact_question_ : function(x){
+	if (Kernel.rational_question_(x))
+		return true;
+	if (Kernel.complex_question_(x) && Kernel.rational_question_(Kernel.real_dash_part(x)) && Kernel.rational_question_(Kernel.imag_dash_part(x)))
+		return true;
+	return false;
+  },
+ 
+  inexact_question_ : function(x){
+	return !exact_question_(x);
+  },
+  
   HEREEEEEEEEEEEEEEEEE : function(){}
 	
   };

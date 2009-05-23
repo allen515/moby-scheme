@@ -875,6 +875,11 @@
 	testEqual_tilde__question_ : function(){
 		this.assert(Kernel.equal_tilde__question_(Rational.ZERO, Rational.ONE, Rational.ONE));
 		this.assert(Kernel.equal_tilde__question_(String.makeInstance("hi"), String.makeInstance("hi"), Rational.ONE));
+	},
+	
+	testExact_question_ : function(){
+		this.assert(Kernel.exact_question_(Rational.ONE));
+		this.assert(!Kernel.exact_question_(FloatPoint.makeInstance(1.1)));
 	}
 	
   }); 
