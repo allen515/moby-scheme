@@ -516,8 +516,9 @@
 	},
 	
 	testCaadr : function(){
-		var lst = Cons.makeInstance(Cons.makeInstance(Cons.makeInstance(Rational.ONE, Cons.makeInstance(FloatPoint.makeInstance(2), EMPTY)), EMPTY), EMPTY);
-		this.assert(Kernel.equal_question_(Kernel.caadr(lst).first(), FloatPoint.makeInstance(2)));
+		var lst = Cons.makeInstance(FloatPoint.makeInstance(1), Cons.makeInstance(Cons.makeInstance(FloatPoint.makeInstance(2), Cons.makeInstance(Cons.makeInstance(FloatPoint.makeInstance(3), EMPTY), EMPTY)), EMPTY));
+	
+		this.assert(Kernel.equal_question_(Kernel.caadr(lst), FloatPoint.makeInstance(2)));
 	}, 
 	
 	testCaar : function(){
@@ -588,6 +589,18 @@
 	testCons_question_ : function(){
 		this.assert(Kernel.cons_question_(Cons.makeInstance(Rational.ONE, EMPTY)));
 		this.assert(!Kernel.cons_question_(EMPTY));
+	},
+	
+	testCons : function(){
+		// just to test that this function passes type checking
+		Kernel.cons(Rational.ONE, EMPTY);
+		//Kernel.cons(EMPTY, Rational.ONE);
+	},
+	
+	testFirst : function(){
+		// test type checker
+		Kernel.first(Cons.makeInstance(Rational.ONE, EMPTY));
+		//Kernel.first(EMPTY);
 	},
 	
 	testSixth : function(){
@@ -666,8 +679,8 @@
 	
 	
 	testString_dash__greaterthan_number : function(){
-		this.assert(!Kernel.string_dash__greaterthan_number("hi"));
-		this.assert(Kernel.equal_question_(Kernel.string_dash__greaterthan_number("5"), FloatPoint.makeInstance(5)));
+		this.assert(!Kernel.string_dash__greaterthan_number(String.makeInstance("hi")));
+		this.assert(Kernel.equal_question_(Kernel.string_dash__greaterthan_number(String.makeInstance("5")), FloatPoint.makeInstance(5)));
 	},
 	
 	testString_dash__greaterthan_symbol : function(){
@@ -908,7 +921,7 @@
 		
 		if (Kernel._lessthan_(s2, FloatPoint.makeInstance(60), []))
 			this.assert(Kernel._lessthan_(s1, FloatPoint.makeInstance(60), []));
-	}
+	}, 
 	
   }); 
   

@@ -71,6 +71,8 @@ org.plt = {};
  
  
   cons: function(x, y) {
+	org.plt.TypeChecker.checkAtomN(y, function(y){return y instanceof org.plt.types.Cons || y instanceof org.plt.types.Empty;}, "list", "cons", 2);
+	
       return org.plt.types.Cons.makeInstance(x, y);
   },
  
@@ -79,32 +81,45 @@ org.plt = {};
   },
  
   first: function(thing) {
+	org.plt.TypeChecker.checkAtom(thing, function(y){return y instanceof org.plt.types.Cons;}, "non-empty list", "first");
+  
       return thing.first();
   },
  
   rest: function(thing) {
+	org.plt.TypeChecker.checkAtom(thing, function(y){return y instanceof org.plt.types.Cons;}, "non-empty list", "rest");
       return thing.rest();
   },
  
  
   second: function(thing) {
+  org.plt.TypeChecker.checkAtom(thing, function(y){return Kernel._greaterthan__equal_(Kernel.length(y), FloatPoint.makeInstance(2),[]);}, "list with 2 or more items", "second");
+	
       return thing.rest().first();
   },
  
   third: function(thing) {
+  org.plt.TypeChecker.checkAtom(thing, function(y){return Kernel._greaterthan__equal_(Kernel.length(y), FloatPoint.makeInstance(3),[]);}, "list with 3 or more items", "third");
+	
       return thing.rest().rest().first();
   },
  
   fourth: function(thing) {
+  org.plt.TypeChecker.checkAtom(thing, function(y){return Kernel._greaterthan__equal_(Kernel.length(y), FloatPoint.makeInstance(4),[]);}, "list with 4 or more items", "fourth");
+  
       return thing.rest().rest().rest().first();
   },
  
   fifth: function(thing) {
+  org.plt.TypeChecker.checkAtom(thing, function(y){return Kernel._greaterthan__equal_(Kernel.length(y), FloatPoint.makeInstance(5),[]);}, "list with 5 or more items", "fifth");
+  
       return thing.rest().rest().rest().rest().first();
   },
  
  
   random: function(x) {
+	org.plt.TypeChecker.checkAtom(x, Kernel.integer_question_, "integer", "random");
+  
       return org.plt.types.Rational.makeInstance
       (Math.floor(org.plt.types.NumberTower.toInteger(x) * 
       Math.random()),
@@ -112,57 +127,86 @@ org.plt = {};
   },
  
   floor: function(x) {
+	org.plt.TypeChecker.checkAtom(x, Kernel.real_question_, "real number", "floor");
+	
   return x.floor();
   },
  
   ceiling: function(x) {
+	org.plt.TypeChecker.checkAtom(x, Kernel.real_question_, "real number", "ceiling");
+  
   return x.ceiling();
   },
  
   sqrt: function(x) {
+	org.plt.TypeChecker.checkAtom(x, Kernel.number_question_, "number", "sqrt");
+  
 	return x.sqrt();
   },
  
   sqr: function(x) {
+	org.plt.TypeChecker.checkAtom(x, Kernel.number_question_, "number", "sqr");
+  
       return org.plt.types.NumberTower.sqr(x);
   },
  
   sin: function(x) {
+  org.plt.TypeChecker.checkAtom(x, Kernel.number_question_, "number", "sin");
+  
 	return x.sin();
   },
  
   cos: function(x) {
+  org.plt.TypeChecker.checkAtom(x, Kernel.number_question_, "number", "cos");
+  
 	return x.cos();
   },
  
   modulo: function(m, n) {
+  org.plt.TypeChecker.checkAtomN(m, Kernel.integer_question_, "integer", "modulo", 1);
+  org.plt.TypeChecker.checkAtomN(n, Kernel.integer_question_, "integer", "modulo", 2);
+  
       return org.plt.types.NumberTower.modulo(m, n);
   },
  
   zero_question_: function(m) {
+  org.plt.TypeChecker.checkAtom(x, Kernel.number_question_, "number", "zero?");
+  
       return org.plt.types.NumberTower.equal(m, org.plt.types.Rational.ZERO);
   },
  
  
   _equal__tilde_ : function(x, y, delta) {
+	org.plt.TypeChecker.checkAtomN(x, Kernel.real_question_, "real number", "=~?", 1);
+	org.plt.TypeChecker.checkAtomN(y, Kernel.real_question_, "real number", "=~?", 2);
+	org.plt.TypeChecker.checkAtomN(delta, function(x){return Kernel.real_question_(x) && !Kernel.negative_question_(x);}, "non-negative real number", "=~?", 3);
+  
       return org.plt.types.NumberTower.approxEqual(x, y, delta);
   },
  
   abs: function(x) {
+  org.plt.TypeChecker.checkAtom(x, Kernel.real_question_, "real number", "abs");
+  
       return org.plt.types.NumberTower.abs(x);
   },
  
   add1 : function(x) {
+  org.plt.TypeChecker.checkAtom(x, Kernel.real_question_, "real number", "add1");
+  
       return org.plt.types.NumberTower.add(x, org.plt.types.Rational.ONE);
   },
  
   
   sub1 : function(x) {
+  org.plt.TypeChecker.checkAtom(x, Kernel.real_question_, "real number", "sub1");
+  
       return org.plt.types.NumberTower.subtract(x, org.plt.types.Rational.ONE);
   },
  
  
   _plus_ : function(args) {
+  org.plt.TypeChecker.checkArrayType(args, Kernel.number_question_, "number", "+");
+  
       var i, sum = org.plt.types.Rational.ZERO;
       for(i = 0; i < args.length; i++) {
     sum = org.plt.types.NumberTower.add(sum, args[i]);
@@ -171,6 +215,7 @@ org.plt = {};
   },
  
   _dash_ : function(first, args) {
+  org.plt.TypeChecker.checkArrayType(args, Kernel.number_question_, "number", "-");
       if (args.length == 0) {
     return org.plt.types.NumberTower.subtract
     (org.plt.types.Rational.ZERO, first);
@@ -185,6 +230,8 @@ org.plt = {};
  
  
   _star_ : function(args) {
+  org.plt.TypeChecker.checkArrayType(args, Kernel.number_question_, "number", "*");
+  
       var i, prod = org.plt.types.Rational.ONE;
       for(i = 0; i < args.length; i++) {
     prod = org.plt.types.NumberTower.multiply(prod, args[i]);
@@ -194,6 +241,8 @@ org.plt = {};
  
  
   _slash_ : function(first, args) {
+  org.plt.TypeChecker.checkArrayType(args, Kernel.number_question_, "number", "/");
+  
       var i, div = first;
       for(i = 0; i < args.length; i++) {
     div = org.plt.types.NumberTower.divide(div, args[i]);
@@ -203,7 +252,10 @@ org.plt = {};
  
  
   _equal_ : function(first, second, rest) {
-      // FIXME: check against other args too.
+  org.plt.TypeChecker.checkAtomN(first, Kernel.number_question_, "number", "=", 1);
+  org.plt.TypeChecker.checkAtomN(second, Kernel.number_question_, "number", "=", 2);
+  org.plt.TypeChecker.checkArrayTypeN(rest, Kernel.number_question_, "number", "=", 3);
+     
       return chainTest(org.plt.types.NumberTower.equal,
            first,
            second,
@@ -212,6 +264,9 @@ org.plt = {};
  
  
   _greaterthan__equal_: function(first, second, rest) {
+    org.plt.TypeChecker.checkAtomN(first, Kernel.number_question_, "number", ">=", 1);
+  org.plt.TypeChecker.checkAtomN(second, Kernel.number_question_, "number", ">=", 2);
+  org.plt.TypeChecker.checkArrayTypeN(rest, Kernel.number_question_, "number", ">=", 3);
       return chainTest(org.plt.types.NumberTower.greaterThanOrEqual,
            first,
            second,
@@ -219,6 +274,9 @@ org.plt = {};
   },
  
   _lessthan__equal_: function(first, second, rest) {
+    org.plt.TypeChecker.checkAtomN(first, Kernel.number_question_, "number", "<=", 1);
+  org.plt.TypeChecker.checkAtomN(second, Kernel.number_question_, "number", "<=", 2);
+  org.plt.TypeChecker.checkArrayTypeN(rest, Kernel.number_question_, "number", "<=", 3);
       return chainTest(org.plt.types.NumberTower.lessThanOrEqual,
            first,
            second,
@@ -226,6 +284,9 @@ org.plt = {};
   },
  
   _greaterthan_: function(first, second, rest) {
+    org.plt.TypeChecker.checkAtomN(first, Kernel.number_question_, "number", ">", 1);
+  org.plt.TypeChecker.checkAtomN(second, Kernel.number_question_, "number", ">", 2);
+  org.plt.TypeChecker.checkArrayTypeN(rest, Kernel.number_question_, "number", ">", 3);
       return chainTest(org.plt.types.NumberTower.greaterThan,
            first,
            second,
@@ -233,6 +294,9 @@ org.plt = {};
   },
  
   _lessthan_: function(first, second, rest) {
+    org.plt.TypeChecker.checkAtomN(first, Kernel.number_question_, "number", "<", 1);
+  org.plt.TypeChecker.checkAtomN(second, Kernel.number_question_, "number", "<", 2);
+  org.plt.TypeChecker.checkArrayTypeN(rest, Kernel.number_question_, "number", "<", 3);
       return chainTest(org.plt.types.NumberTower.lessThan,
            first,
            second,
@@ -240,66 +304,100 @@ org.plt = {};
   },
  
   min : function(first, rest) {
+  org.plt.TypeChecker.checkAtomN(first, Kernel.real_question_, "real number", "min", 1);
+  org.plt.TypeChecker.checkArrayTypeN(rest, Kernel.real_question_, "real number", "min", 2);
+  
       return chainFind(org.plt.types.NumberTower.lessThanOrEqual,
            first, 
            rest);
   },
  
   max : function(first, rest) {
+  org.plt.TypeChecker.checkAtomN(first, Kernel.real_question_, "real number", "max", 1);
+  org.plt.TypeChecker.checkArrayTypeN(rest, Kernel.real_question_, "real number", "max", 2);
+  
       return chainFind(org.plt.types.NumberTower.greaterThanOrEqual,
            first, 
            rest);
   },
  
   symbol_equal__question_: function(x, y) {
+  org.plt.TypeChecker.checkAtomN(x, Kernel.symbol_question_, "symbol", "symbol=?", 1);
+  org.plt.TypeChecker.checkAtomN(y, Kernel.symbol_question_, "symbol", "symbol=?", 2);
+  
       return x.isEqual(y);
   },
  
   not : function(x) {
+  org.plt.TypeChecker.checkAtom(x, Kernel.boolean_question_, "boolean", "not");
+  
       return !x;
   },
  
   number_dash__greaterthan_string: function(x) {
+  org.plt.TypeChecker.checkAtom(x, Kernel.number_question_, "number", "number->string");
+  
       return org.plt.types.String.makeInstance(x.toString());
   },
   
   conjugate: function(x){
+  org.plt.TypeChecker.checkAtom(x, Kernel.number_question_, "number", "conjugate");
+  
 	return x.conjugate();
   },
   
   magnitude: function(x){
+  org.plt.TypeChecker.checkAtom(x, Kernel.number_question_, "number", "magnitude");
+  
 	return x.magnitude();
   },
   
   log : function(x) {
+  org.plt.TypeChecker.checkAtom(x, Kernel.number_question_, "number", "log");
+  
 	return x.log();
   },
   
   angle : function(x) {
+  org.plt.TypeChecker.checkAtom(x, Kernel.number_question_, "number", "angle");
+  
 	return x.angle();
   },
   
   atan : function(x) {
+  org.plt.TypeChecker.checkAtom(x, Kernel.number_question_, "number", "atan");
+  
 	return x.atan();
   },
   
   expt : function(x, y){
+  org.plt.TypeChecker.checkAtomN(x, Kernel.number_question_, "number", "expt", 1);
+  org.plt.TypeChecker.checkAtomN(y, Kernel.number_question_, "number", "expt", 2);
+  
 	return org.plt.types.NumberTower.expt(x, y);
   },
   
   exp : function(x){
+  org.plt.TypeChecker.checkAtom(x, Kernel.number_question_, "number", "exp");
+  
 	return x.exp();
   },
   
   acos : function(x){
+  org.plt.TypeChecker.checkAtom(x, Kernel.number_question_, "number", "acos");
+  
 	return x.acos();
   },
   
   asin : function(x){
+  org.plt.TypeChecker.checkAtom(x, Kernel.number_question_, "number", "asin");
+  
 	return x.asin();
   },
   
   tan : function(x){
+  org.plt.TypeChecker.checkAtom(x, Kernel.number_question_, "number", "tan");
+  
 	return org.plt.types.NumberTower.divide(x.sin(), x.cos());
   },
   
@@ -308,98 +406,133 @@ org.plt = {};
   },
   
   cosh : function(x) {
+  org.plt.TypeChecker.checkAtom(x, Kernel.number_question_, "number", "cosh");
+  
 	return this._plus_([this.exp(x), this.exp(x.minus())]).half();
   },
   
   sinh : function(x) {
+  org.plt.TypeChecker.checkAtom(x, Kernel.number_question_, "number", "sinh");
+  
 	return org.plt.types.NumberTower.subtract(this.exp(x), this.exp(x.minus())).half();
   },
   
   denominator : function(x) {
+  org.plt.TypeChecker.checkAtom(x, Kernel.rational_question_, "rational number", "denominator");
+  
 	return org.plt.types.Rational.makeInstance(x.d, 1);
   },
   
   numerator : function(x){
+  org.plt.TypeChecker.checkAtom(x, Kernel.rational_question_, "rational number", "numerator");
+  
 	return org.plt.types.Rational.makeInstance(x.n, 1);
   },
   
   odd_question_ : function(x){
+  org.plt.TypeChecker.checkAtom(x, Kernel.integer_question_, "integer", "odd?");
+ 
 	return (x.toInteger() % 2 == 1);
   },
   
   even_question_ : function(x) {
+  org.plt.TypeChecker.checkAtom(x, Kernel.integer_question_, "integer", "even?");
+  
 	return (x.toInteger() % 2 == 0);
   },
   
   positive_question_ : function(x){
+  org.plt.TypeChecker.checkAtom(x, Kernel.number_question_, "number", "positive?");
+  
 	return this._greaterthan_(x, Rational.ZERO, []);
   },
   
   negative_question_ : function(x){
+  org.plt.TypeChecker.checkAtom(x, Kernel.number_question_, "number", "negative?");
+  
 	return this._lessthan_(x, Rational.ZERO, []);
   },
   
   imag_dash_part : function(x){
+  org.plt.TypeChecker.checkAtom(x, Kernel.number_question_, "number", "imag-part");
+  
 	return x.imag_dash_part();
   },
   
   real_dash_part : function(x){
+  org.plt.TypeChecker.checkAtom(x, Kernel.number_question_, "number", "real-part");
+  
 	return x.real_dash_part();
   },
   
   integer_question_ : function(x){
-	return this.equal_question_(x, x.floor());
+	return Kernel.equal_question_(x, x.floor());
   },
   
   make_dash_rectangular : function(x, y){
-	return org.plt.types.Complex.makeInstance(x.toFloat(), y.toFloat());
-  },
- 
-  max : function(first, rest){
-	var i, ret = first;
-	for (i = 0; i < rest.length; i++)
-		if (org.plt.types.NumberTower.greaterThan(rest[i], ret))
-			ret = rest[i];
-	return ret;
-  },
+  org.plt.TypeChecker.checkAtomN(x, Kernel.real_question_, "real number", "make-rectangular", 1);
+  org.plt.TypeChecker.checkAtomN(y, Kernel.real_question_, "real number", "make-rectangular", 2);
   
-  min : function(first, rest){
-	var i, ret = first;
-	for (i = 0; i < rest.length; i++)
-		if (org.plt.types.NumberTower.lessThan(rest[i], ret))
-			ret = rest[i];
-	return ret;
+	return org.plt.types.Complex.makeInstance(x.toFloat(), y.toFloat());
   },
   
   number_dash__greaterthan_string : function(n){
+  org.plt.TypeChecker.checkAtom(n, Kernel.number_question_, "number", "number->string");
+  
 	return org.plt.types.String.makeInstance(n);
   },
   
   string_equal__question_ : function(first, second, rest){
+  org.plt.TypeChecker.checkAtomN(first, Kernel.string_question_, "string", "string=?", 1);
+  org.plt.TypeChecker.checkAtomN(second, Kernel.string_question_, "string", "string=?", 2);
+  org.plt.TypeChecker.checkArrayTypeN(rest, Kernel.string_question_, "string", "string=?", 3);
+  
 	return chainTest(function(x, y){return x.toString() == y.toString();}, first, second, rest);
   },
   
   string_lessthan__equal__question_: function(first, second, rest){
+  org.plt.TypeChecker.checkAtomN(first, Kernel.string_question_, "string", "string<=?", 1);
+  org.plt.TypeChecker.checkAtomN(second, Kernel.string_question_, "string", "string<=?", 2);
+  org.plt.TypeChecker.checkArrayTypeN(rest, Kernel.string_question_, "string", "string<=?", 3);
+  
 	return chainTest(function(x, y){return x.toString() <= y.toString();}, first, second, rest);
   },
   
   string_lessthan__question_: function(first, second, rest){
+  org.plt.TypeChecker.checkAtomN(first, Kernel.string_question_, "string", "string<?", 1);
+  org.plt.TypeChecker.checkAtomN(second, Kernel.string_question_, "string", "string<?", 2);
+  org.plt.TypeChecker.checkArrayTypeN(rest, Kernel.string_question_, "string", "string<?", 3);
+  
 	return chainTest(function(x, y){return x.toString() < y.toString();}, first, second, rest);
   },
   
   string_greaterthan__equal__question_: function(first, second, rest){
+  org.plt.TypeChecker.checkAtomN(first, Kernel.string_question_, "string", "string>=?", 1);
+  org.plt.TypeChecker.checkAtomN(second, Kernel.string_question_, "string", "string>=?", 2);
+  org.plt.TypeChecker.checkArrayTypeN(rest, Kernel.string_question_, "string", "string>=?", 3);
+  
 	return chainTest(function(x, y){return x.toString() >= y.toString();}, first, second, rest);
   },
   
   string_greaterthan__question_: function(first, second, rest){
+  org.plt.TypeChecker.checkAtomN(first, Kernel.string_question_, "string", "string>?", 1);
+  org.plt.TypeChecker.checkAtomN(second, Kernel.string_question_, "string", "string>?", 2);
+  org.plt.TypeChecker.checkArrayTypeN(rest, Kernel.string_question_, "string", "string>?", 3);
+  
 	return chainTest(function(x, y){return x.toString() > y.toString();}, first, second, rest);
   },
   
   quotient : function(x, y){
+  org.plt.TypeChecker.checkAtomN(x, Kernel.integer_question_, "integer", "quotient", 1);
+  org.plt.TypeChecker.checkAtomN(y, Kernel.integer_question_, "integer", "quotient", 2);
+  
 	return org.plt.types.Rational.makeInstance(org.plt.types.NumberTower.divide(x,y).floor(), 1);
   },
   
   remainder : function(x, y) {
+  org.plt.TypeChecker.checkAtomN(x, Kernel.integer_question_, "integer", "remainder", 1);
+  org.plt.TypeChecker.checkAtomN(y, Kernel.integer_question_, "integer", "remainder", 2);
+  
 	return org.plt.types.Rational.makeInstance(x.toInteger() % y.toInteger(), 1);
   },
   
@@ -409,10 +542,14 @@ org.plt = {};
   
   
   round : function(x){
+  org.plt.TypeChecker.checkAtom(x, Kernel.real_question_, "real number", "round");
+  
 	return x.round();
   },
   
   sgn : function(x){
+  org.plt.TypeChecker.checkAtom(x, Kernel.real_question_, "real number", "sgn");
+  
 	if (this.positive_question_(x))
 		return Rational.ONE;
 	if (this.negative_question_(x))
@@ -422,10 +559,15 @@ org.plt = {};
   },
   
   zero_question_ : function(x){
+  org.plt.TypeChecker.checkAtom(x, Kernel.number_question_, "number", "zero?");
+  
 		return org.plt.types.NumberTower.equal(x, Rational.ZERO);
   },
   
   boolean_equal__question_ : function(x, y){
+  org.plt.TypeChecker.checkAtomN(x, Kernel.boolean_question_, "boolean", "boolean=?", 1);
+  org.plt.TypeChecker.checkAtomN(y, Kernel.boolean_question_, "boolean", "boolean=?", 2);
+  
 	return x == y;
   },
   
@@ -437,15 +579,16 @@ org.plt = {};
 	return  x == org.plt.types.Logic.FALSE;
   },
   
-  not : function(x){
-	return x == org.plt.types.Logic.FALSE ? org.plt.types.Logic.TRUE : org.plt.types.Logic.FALSE;
-  },
-  
   symbol_dash__greaterthan_string : function(x){
+  org.plt.TypeChecker.checkAtom(x, Kernel.symbol_question_, "symbol", "symbol->string");
+  
 	return org.plt.types.String.makeInstance(x);
   },
   
   symbol_equal__question_ : function(x, y){
+  org.plt.TypeChecker.checkAtomN(x, Kernel.symbol_question_, "symbol", "symbol=?", 1);
+  org.plt.TypeChecker.checkAtomN(y, Kernel.symbol_question_, "symbol", "symbol=?", 2);
+  
 	return x.val == y.val;
   },
   
@@ -458,6 +601,10 @@ org.plt = {};
   },
   
   append : function(first, second, rest){
+  org.plt.TypeChecker.checkAtomN(first, function(y){return y instanceof org.plt.types.Cons || y instanceof org.plt.types.Empty;}, "list", "append", 1);
+  org.plt.TypeChecker.checkAtomN(second, function(y){return y instanceof org.plt.types.Cons || y instanceof org.plt.types.Empty;}, "list", "append", 2);
+  org.plt.TypeChecker.checkArrayTypeN(rest, function(y){return y instanceof org.plt.types.Cons || y instanceof org.plt.types.Empty;}, "list", "append", 3);
+  
 	var ret = first.append(second);
 	var i;
 	for (i = 0; i < rest.length; i++)
@@ -466,6 +613,8 @@ org.plt = {};
   },
   
   reverse : function(lst){
+  org.plt.TypeChecker.checkAtom(lst, function(y){return y instanceof org.plt.types.Cons || y instanceof org.plt.types.Empty;}, "list", "reverse");
+  
 	var ret = org.plt.types.Empty.EMPTY;
 	while (!lst.isEmpty()){
 		ret = org.plt.types.Cons.makeInstance(lst.first(), ret);
@@ -476,6 +625,8 @@ org.plt = {};
   }, 
     
   assq : function(x, lst){
+  org.plt.TypeChecker.checkListTypeN(lst, Kernel.cons_question_, "list of cons", "assq", 2);
+  
 	while (!lst.isEmpty() && !Kernel.eq_question_(x, lst.first().first()))
 		lst = lst.rest();
 	if (lst.isEmpty())
@@ -483,63 +634,125 @@ org.plt = {};
 	else return lst.first();
   },
   
+   //  For cxxxxr, type checking is steamlined with execution
   caaar : function(lst){
-	return lst.first().first().first();
+  org.plt.TypeChecker.checkAtom(lst, Kernel.cons_question_, "caaarable value", "caaar");
+  lst = lst.first();
+  org.plt.TypeChecker.checkAtom(lst, Kernel.cons_question_, "caaarable value", "caaar");
+  lst = lst.first();
+  org.plt.TypeChecker.checkAtom(lst, Kernel.cons_question_, "caaarable value", "caaar");
+  return lst.first();
   },
-  
+ 
   caadr : function(lst){
-	return lst.first().first().rest();
+   org.plt.TypeChecker.checkAtom(lst, Kernel.cons_question_, "caadrable value", "caadr");
+   lst = lst.rest();
+   org.plt.TypeChecker.checkAtom(lst, Kernel.cons_question_, "caadrable value", "caadr");
+   lst = lst.first();
+   org.plt.TypeChecker.checkAtom(lst, Kernel.cons_question_, "caadrable value", "caadr");
+   return lst.first();
   },
   
   caar : function(lst){
-	return lst.first().first();
+	org.plt.TypeChecker.checkAtom(lst, Kernel.cons_question_, "caarable value", "caar");
+	lst = lst.first();
+	org.plt.TypeChecker.checkAtom(lst, Kernel.cons_question_, "caarable value", "caar");
+	return lst.first();
   },
   
   cadar : function(lst){
-	return lst.first().rest().first();
+	org.plt.TypeChecker.checkAtom(lst, Kernel.cons_question_, "cadarable value", "cadar");
+	lst = lst.first();
+	org.plt.TypeChecker.checkAtom(lst, Kernel.cons_question_, "cadarable value", "cadar");
+	lst = lst.rest();
+	org.plt.TypeChecker.checkAtom(lst, Kernel.cons_question_, "cadarable value", "cadar");
+	return lst.first();
   },
   
   cadddr : function(lst){
-	return lst.rest().rest().rest().first();
+	org.plt.TypeChecker.checkAtom(lst, Kernel.cons_question_, "cadddrable value", "cadddr");
+	lst = lst.rest();
+	org.plt.TypeChecker.checkAtom(lst, Kernel.cons_question_, "cadddrable value", "cadddr");
+	lst = lst.rest();
+	org.plt.TypeChecker.checkAtom(lst, Kernel.cons_question_, "cadddrable value", "cadddr");
+	lst = lst.rest();
+	org.plt.TypeChecker.checkAtom(lst, Kernel.cons_question_, "cadddrable value", "cadddr");
+	return lst.first();
   },
   
   caddr : function(lst){
-	return lst.rest().rest().first();
+	org.plt.TypeChecker.checkAtom(lst, Kernel.cons_question_, "caddr value", "caddr");
+	lst = lst.rest();
+	org.plt.TypeChecker.checkAtom(lst, Kernel.cons_question_, "caddr value", "caddr");
+	lst = lst.rest();
+	org.plt.TypeChecker.checkAtom(lst, Kernel.cons_question_, "caddr value", "caddr");
+	return lst.first();
   },
   
   cadr : function(lst){
-	return lst.rest().first();
+	org.plt.TypeChecker.checkAtom(lst, Kernel.cons_question_, "cadr value", "cadr");
+	lst = lst.rest();
+	org.plt.TypeChecker.checkAtom(lst, Kernel.cons_question_, "cadr value", "cadr");
+	return lst.first();
   },
   
   car : function(lst){
+	org.plt.TypeChecker.checkAtom(lst, Kernel.cons_question_, "carable value", "car");
 	return lst.first();
   },
   
   cdaar : function(lst){
-	return lst.first().first().rest();
+	org.plt.TypeChecker.checkAtom(lst, Kernel.cons_question_, "cdaarable value", "cdaar");
+	lst = lst.first();
+	org.plt.TypeChecker.checkAtom(lst, Kernel.cons_question_, "cdaarable value", "cdaar");
+	lst = lst.first();
+	org.plt.TypeChecker.checkAtom(lst, Kernel.cons_question_, "cdaarable value", "cdaar");
+	return lst.rest();
   },
   
   cdadr : function(lst){
-	return lst.rest().first().rest();
+	org.plt.TypeChecker.checkAtom(lst, Kernel.cons_question_, "cdadrable value", "cdadr");
+	lst = lst.rest();
+	org.plt.TypeChecker.checkAtom(lst, Kernel.cons_question_, "cdadrable value", "cdadr");
+	lst = lst.first();
+	org.plt.TypeChecker.checkAtom(lst, Kernel.cons_question_, "cdadrable value", "cdadr");
+	return lst.rest();
   },
   
   cdar : function(lst){
-	return lst.first().rest();
+	org.plt.TypeChecker.checkAtom(lst, Kernel.cons_question_, "cdarable value", "cdar");
+	lst = lst.first();
+	org.plt.TypeChecker.checkAtom(lst, Kernel.cons_question_, "cdarable value", "cdar");
+	return lst.rest();
   },
   
   cddar : function(lst){
-	return lst.first().rest().rest();
+  org.plt.TypeChecker.checkAtom(lst, Kernel.cons_question_, "cddarable value", "cddar");
+  lst = lst.first();
+  org.plt.TypeChecker.checkAtom(lst, Kernel.cons_question_, "cddarable value", "cddar");
+  lst = lst.rest();
+  org.plt.TypeChecker.checkAtom(lst, Kernel.cons_question_, "cddarable value", "cddar");
+  return lst.rest();
   },
   
   cdddr : function(lst){
-	return lst.rest().rest().rest();
+  org.plt.TypeChecker.checkAtom(lst, Kernel.cons_question_, "cdddrable value", "cdddr");
+  lst = lst.rest();
+  org.plt.TypeChecker.checkAtom(lst, Kernel.cons_question_, "cdddrable value", "cdddr");
+  lst = lst.rest();
+  org.plt.TypeChecker.checkAtom(lst, Kernel.cons_question_, "cdddrable value", "cdddr");
+  return lst.rest();
   },
   
   cddr : function(lst){
-	return lst.rest().rest();
+  org.plt.TypeChecker.checkAtom(lst, Kernel.cons_question_, "cddrable value", "cddr");
+  lst = lst.rest();
+  org.plt.TypeChecker.checkAtom(lst, Kernel.cons_question_, "cddrable value", "cddr");
+  return lst.rest();
   },
   
   cdr : function(lst){
+  org.plt.TypeChecker.checkAtom(lst, Kernel.cons_question_, "cdrable value", "cdr");
 	return lst.rest();
   },
   
@@ -548,18 +761,26 @@ org.plt = {};
   },
   
   sixth : function(lst){
+  org.plt.TypeChecker.checkAtom(lst, function(y){return Kernel._greaterthan__equal_(Kernel.length(y), FloatPoint.makeInstance(6),[]);}, "list with 6 or more items", "sixth");
+  
 	return lst.rest().rest().rest().rest().rest().first();
   },
   
   seventh: function(lst){
+    org.plt.TypeChecker.checkAtom(lst, function(y){return Kernel._greaterthan__equal_(Kernel.length(y), FloatPoint.makeInstance(7),[]);}, "list with 7 or more items", "seventh");
+  
 	return lst.rest().rest().rest().rest().rest().rest().first();
   },
   
   eighth : function(lst){
+    org.plt.TypeChecker.checkAtom(lst, function(y){return Kernel._greaterthan__equal_(Kernel.length(y), FloatPoint.makeInstance(8),[]);}, "list with 8 or more items", "eighth");
+  
 	return lst.rest().rest().rest().rest().rest().rest().rest().first();
   },
   
   length : function(lst){
+  org.plt.TypeChecker.checkAtom(lst, function(y){return y instanceof org.plt.types.Cons || y instanceof org.plt.types.Empty;}, "list", "length");
+  
 	var ret = Rational.ZERO;
 	for (; !lst.isEmpty(); lst = lst.rest())
 		ret = Kernel.add1(ret);
@@ -574,10 +795,15 @@ org.plt = {};
   },
   
   list_star_ : function(items, lst){
+  org.plt.TypeChecker.checkAtom(lst, function(y){return y instanceof org.plt.types.Cons || y instanceof org.plt.types.Empty;}, "list", "list*");
+  
 	return Kernel.append(Kernel.list(items), lst, []);
   },
   
   list_dash_ref : function(lst, x){
+  org.plt.TypeChecker.checkAtomN(lst, function(y){return y instanceof org.plt.types.Cons || y instanceof org.plt.types.Empty;}, "list", "list-ref", 1);
+  org.plt.TypeChecker.checkAtomN(x, function(y){return Kernel.integer_question_(y) && !Kernel.negative_question_(y);}, "natural number", "list-ref", 2);
+  
 	var i = org.plt.types.Rational.ZERO;
 	for (; Kernel._lessthan_(i, x,[]); i = Kernel.add1(i))
 		lst = lst.rest();
@@ -585,6 +811,8 @@ org.plt = {};
   },
   
   member : function(item, lst){
+  org.plt.TypeChecker.checkAtomN(lst, function(y){return y instanceof org.plt.types.Cons || y instanceof org.plt.types.Empty;}, "list", "member", 2);
+  
 	while (!lst.isEmpty()){
 		if (Kernel.equal_question_(item, lst.first()))
 			return true;
@@ -595,6 +823,8 @@ org.plt = {};
   },
   
   memq : function(item, lst){
+    org.plt.TypeChecker.checkAtomN(lst, function(y){return y instanceof org.plt.types.Cons || y instanceof org.plt.types.Empty;}, "list", "memq", 2);
+  
 	while (!lst.isEmpty()){
 		if (Kernel.eq_question_(item, lst.first()))
 			return lst;
@@ -609,6 +839,8 @@ org.plt = {};
   },
   
   memv : function(item, lst){
+    org.plt.TypeChecker.checkAtomN(lst, function(y){return y instanceof org.plt.types.Cons || y instanceof org.plt.types.Empty;}, "list", "memv", 2);
+  
 	while (!lst.isEmpty()){
 		if (Kernel.eqv_question_(item, lst.first()))
 			return lst;
@@ -627,6 +859,8 @@ org.plt = {};
   },
   
   string_dash__greaterthan_number : function(str){
+  org.plt.TypeChecker.checkAtomN(str, Kernel.string_question_, "string", "string->number");
+  
 	var val = str * 1;
 	if (isNaN(val))
 		return false;
@@ -634,58 +868,89 @@ org.plt = {};
   },
   
   string_dash__greaterthan_symbol : function(str){
+  org.plt.TypeChecker.checkAtomN(str, Kernel.string_question_, "string", "string->symbol");
+  
 	return org.plt.types.Symbol.makeInstance(str);
   },
   
   string_dash_append : function(arr){
+  org.plt.TypeChecker.checkArrayType(arr, Kernel.string_question_, "string", "string->append");
+  
 	var ret = "";
 	for (var i = 0; i < arr.length; i++)
-		ret += arr[i];
-	return ret;
+		ret += arr[i].toString();
+	return org.plt.types.String.makeInstance(ret);
   },
   
   string_dash_ci_equal__question_ : function(first, second, rest){
-	first = first.toUpperCase();
-	second = second.toUpperCase();
+  org.plt.TypeChecker.checkAtomN(first, Kernel.string_question_, "string", "string-ci=?", 1);
+  org.plt.TypeChecker.checkAtomN(second, Kernel.string_question_, "string", "string-ci=?", 2);
+  org.plt.TypeChecker.checkArrayTypeN(rest, Kernel.string_question_, "string", "string-ci=?", 3);
+  
+	first = org.plt.types.String.makeInstance(first.toString().toUpperCase());
+	second = org.plt.types.String.makeInstance(second.toString().toUpperCase());
 	for (var i = 0; i < rest.length; i++)
-		rest[i] = rest[i].toUpperCase();
+		rest[i] = org.plt.types.String.makeInstance(rest[i].toString().toUpperCase());
 	return Kernel.string_equal__question_(first, second, rest);
   },
   
   string_dash_ci_lessthan__equal__question_ : function(first, second, rest){
-	first = first.toUpperCase();
-	second = second.toUpperCase();
+    org.plt.TypeChecker.checkAtomN(first, Kernel.string_question_, "string", "string-ci<=?", 1);
+  org.plt.TypeChecker.checkAtomN(second, Kernel.string_question_, "string", "string-ci<=?", 2);
+  org.plt.TypeChecker.checkArrayTypeN(rest, Kernel.string_question_, "string", "string-ci<=?", 3);
+  
+	first = org.plt.types.String.makeInstance(first.toUpperCase());
+	second = org.plt.types.String.makeInstance(second.toUpperCase());
 	for (var i = 0; i < rest.length; i++)
-		rest[i] = rest[i].toUpperCase();
+		rest[i] = org.plt.types.String.makeInstance(rest[i].toUpperCase());
 	return Kernel.string_lessthan__equal__question_(first, second, rest);
   },
   
   string_dash_ci_lessthan__question_ : function(first, second, rest){
-	first = first.toUpperCase();
-	second = second.toUpperCase();
+    org.plt.TypeChecker.checkAtomN(first, Kernel.string_question_, "string", "string-ci<?", 1);
+  org.plt.TypeChecker.checkAtomN(second, Kernel.string_question_, "string", "string-ci<?", 2);
+  org.plt.TypeChecker.checkArrayTypeN(rest, Kernel.string_question_, "string", "string-ci<?", 3);
+  
+	first = org.plt.types.String.makeInstance(first.toUpperCase());
+	second = org.plt.types.String.makeInstance(second.toUpperCase());
 	for (var i = 0; i < rest.length; i++)
-		rest[i] = rest[i].toUpperCase();
+		rest[i] = org.plt.types.String.makeInstance(rest[i].toUpperCase());
 	return Kernel.string_lessthan__question_(first, second, rest);
   },
   
   string_dash_ci_greaterthan__question_ : function(first, second, rest){
+    org.plt.TypeChecker.checkAtomN(first, Kernel.string_question_, "string", "string-ci>?", 1);
+  org.plt.TypeChecker.checkAtomN(second, Kernel.string_question_, "string", "string-ci>?", 2);
+  org.plt.TypeChecker.checkArrayTypeN(rest, Kernel.string_question_, "string", "string-ci>?", 3);
+  
 	return !Kernel.string_dash_ci_lessthan__equal__question_(first, second, rest);
   },
   
   string_dash_ci_greaterthan__equal__question_ : function(first, second, rest){
+    org.plt.TypeChecker.checkAtomN(first, Kernel.string_question_, "string", "string-ci>=?", 1);
+  org.plt.TypeChecker.checkAtomN(second, Kernel.string_question_, "string", "string-ci>=?", 2);
+  org.plt.TypeChecker.checkArrayTypeN(rest, Kernel.string_question_, "string", "string-ci>=?", 3);
+  
 	return !Kernel.string_dash_ci_lessthan__question_(first, second, rest);
   },
   
   string_dash_copy : function(str){
+  org.plt.TypeChecker.checkAtom(str, Kernel.string_question_, "string", "string-copy");
+  
 	return org.plt.types.String.makeInstance(str);
   },
   
   string_dash_length : function(str){
+   org.plt.TypeChecker.checkAtom(str, Kernel.string_question_, "string", "string-length");
+  
 	return org.plt.types.Rational.makeInstance(str.length, 1);
   },
   
   string_dash_ref : function(str, i){
-	return str.charAt(i.toInteger());
+  org.plt.TypeChecker.checkAtomN(str, Kernel.string_question_, "string", "string-ref", 1);
+  org.plt.TypeChecker.checkAtomN(i, function(y){return Kernel.integer_question_(y) && !Kernel.negative_question_(y);}, "natural number", "string-ref", 2);
+  
+	return org.plt.types.String.makeInstance(str.charAt(i.toInteger()));
   },
   
   string_question_ : function(str){
@@ -693,45 +958,83 @@ org.plt = {};
   },
   
   substring : function(str, begin, end){
-	return str.toString().substring(begin.toInteger(), end.toInteger());
+  org.plt.TypeChecker.checkAtomN(str, Kernel.string_question_, "string", "substring", 1);
+  org.plt.TypeChecker.checkAtomN(begin, function(y){var length = Kernel.string_dash_length(str); return Kernel.integer_question_(y) && !Kernel.negative_question_(y) && Kernel._lessthan_(y, length, []);}, "natural number of range [0, " + Kernel.string_dash_length(str) + ")" , "substring", 2);
+  org.plt.TypeChecker.checkAtomN(end, function(y){var length = Kernel.string_dash_length(str); return Kernel.integer_question_(y) && Kernel._greaterthan_(y, begin, []) && Kernel._lessthan_(y, length, []);}, "natural number of range [" + Kernel.add1(begin) + ", " + Kernel.string_dash_length(str) + ")", "substring", 3);
+  
+	return org.plt.types.String.makeInstance(str.toString().substring(begin.toInteger(), end.toInteger()));
+  },
+  
+  char_question_ : function(x){
+	return x instanceof org.plt.types.Char;
   },
   
   char_dash__greaterthan_integer : function(ch){
+  org.plt.TypeChecker.checkAtom(ch, Kernel.char_question_, "char", "char->integer");
+  
 	var str = new String(ch.val);
 	return org.plt.types.Rational.makeInstance(str.charCodeAt(0), 1);
   },
   
   integer_dash__greaterthan_char : function(n){
+  org.plt.TypeChecker.checkAtom(n, Kernel.integer_question_, "integer", "integer->char");
+  
 	var str = String.fromCharCode(n.toInteger());
 	return org.plt.types.Char.makeInstance(str);
   },
   
   char_dash_alphabetic_question_ : function(c){
+   org.plt.TypeChecker.checkAtom(c, Kernel.char_question_, "char", "char-alphabetic?");
+  
 	var str = c.val.toString();
 	return (str >= "a" && str <= "z") || (str >= "A" && str <= "Z");
   },
   
   char_equal__question_ : function(first, second, rest){
+  org.plt.TypeChecker.checkAtomN(first, Kernel.char_question_, "char", "char=?", 1);
+  org.plt.TypeChecker.checkAtomN(second, Kernel.char_question_, "char", "char=?", 2);
+  org.plt.TypeChecker.checkArrayTypeN(rest, Kernel.char_question_, "char", "char=?", 3);
+  
 	return chainTest(function(x, y){return x.isEqual(y);}, first, second, rest);
   },
   
   char_lessthan__question_ : function(first, second, rest){
+    org.plt.TypeChecker.checkAtomN(first, Kernel.char_question_, "char", "char<?", 1);
+  org.plt.TypeChecker.checkAtomN(second, Kernel.char_question_, "char", "char<?", 2);
+  org.plt.TypeChecker.checkArrayTypeN(rest, Kernel.char_question_, "char", "char<?", 3);
+  
 	return chainTest(function(x, y){return x.val.toString() < y.val.toString()}, first, second, rest);
   },
   
   char_lessthan__equal__question_ : function(first, second, rest){
+    org.plt.TypeChecker.checkAtomN(first, Kernel.char_question_, "char", "char<=?", 1);
+  org.plt.TypeChecker.checkAtomN(second, Kernel.char_question_, "char", "char<=?", 2);
+  org.plt.TypeChecker.checkArrayTypeN(rest, Kernel.char_question_, "char", "char<=?", 3);
+  
 	return chainTest(function(x, y){return x.val.toString() <= y.val.toString()}, first, second, rest);
   },
   
   char_greaterthan__question_ : function(first, second, rest){
+    org.plt.TypeChecker.checkAtomN(first, Kernel.char_question_, "char", "char>?", 1);
+  org.plt.TypeChecker.checkAtomN(second, Kernel.char_question_, "char", "char>?", 2);
+  org.plt.TypeChecker.checkArrayTypeN(rest, Kernel.char_question_, "char", "char>?", 3);
+  
 	return !char_lessthan__equal__question_(first, second, rest);
   },
   
   char_greaterthan__equal__question_ : function(first, second, rest){
+    org.plt.TypeChecker.checkAtomN(first, Kernel.char_question_, "char", "char>=?", 1);
+  org.plt.TypeChecker.checkAtomN(second, Kernel.char_question_, "char", "char>=?", 2);
+  org.plt.TypeChecker.checkArrayTypeN(rest, Kernel.char_question_, "char", "char>=?", 3);
+  
 	return !char_lessthan__question_(first, second, rest);
   },
   
   char_dash_ci_equal__question_ : function(first, second, rest){
+    org.plt.TypeChecker.checkAtomN(first, Kernel.char_question_, "char", "char-ci=?", 1);
+  org.plt.TypeChecker.checkAtomN(second, Kernel.char_question_, "char", "char-ci=?", 2);
+  org.plt.TypeChecker.checkArrayTypeN(rest, Kernel.char_question_, "char", "char-ci=?", 3);
+  
 	first = org.plt.types.Char.makeInstance(first.val.toUpperCase());
 	second = org.plt.types.Char.makeInstance(second.val.toUpperCase());
 	for (var i = 0; i < rest.length; i++)
@@ -740,6 +1043,10 @@ org.plt = {};
   },
   
   char_dash_ci_lessthan__question_ : function(first, second, rest){
+    org.plt.TypeChecker.checkAtomN(first, Kernel.char_question_, "char", "char-ci<?", 1);
+  org.plt.TypeChecker.checkAtomN(second, Kernel.char_question_, "char", "char-ci<?", 2);
+  org.plt.TypeChecker.checkArrayTypeN(rest, Kernel.char_question_, "char", "char-ci<?", 3);
+  
 	first = org.plt.types.Char.makeInstance(first.val.toUpperCase());
 	second = org.plt.types.Char.makeInstance(second.val.toUpperCase());
 	for (var i = 0; i < rest.length; i++)
@@ -748,6 +1055,10 @@ org.plt = {};
   },
 
   char_dash_ci_lessthan__equal__question_ : function(first, second, rest){
+    org.plt.TypeChecker.checkAtomN(first, Kernel.char_question_, "char", "char-ci<=?", 1);
+  org.plt.TypeChecker.checkAtomN(second, Kernel.char_question_, "char", "char-ci<=?", 2);
+  org.plt.TypeChecker.checkArrayTypeN(rest, Kernel.char_question_, "char", "char-ci<=?", 3);
+  
 	first = org.plt.types.Char.makeInstance(first.val.toUpperCase());
 	second = org.plt.types.Char.makeInstance(second.val.toUpperCase());
 	for (var i = 0; i < rest.length; i++)
@@ -756,41 +1067,63 @@ org.plt = {};
   },
   
   char_dash_ci_greaterthan__question_ : function(first, second, rest){
+    org.plt.TypeChecker.checkAtomN(first, Kernel.char_question_, "char", "char-ci>?", 1);
+  org.plt.TypeChecker.checkAtomN(second, Kernel.char_question_, "char", "char-ci>?", 2);
+  org.plt.TypeChecker.checkArrayTypeN(rest, Kernel.char_question_, "char", "char-ci>?", 3);
+  
 	return !Kernel.char_dash_ci_lessthan__equal__question_(first,second,rest);
   },
   
   char_dash_ci_greaterthan__equal__question_ : function(first, second, rest){
+    org.plt.TypeChecker.checkAtomN(first, Kernel.char_question_, "char", "char-ci>=?", 1);
+  org.plt.TypeChecker.checkAtomN(second, Kernel.char_question_, "char", "char-ci>=?", 2);
+  org.plt.TypeChecker.checkArrayTypeN(rest, Kernel.char_question_, "char", "char-ci>=?", 3);
+  
 	return !Kernel.char_dash_ci_lessthan__question_(first,second,rest);
   },
   
   char_dash_downcase : function(ch){
+  org.plt.TypeChecker.checkAtom(ch, Kernel.char_question_, "char", "char-downcase");
+  
 	var down = ch.val.toString().toLowerCase();
 	return org.plt.types.Char.makeInstance(down);
   },
   
   char_dash_lower_dash_case_question_ : function(ch){
+  org.plt.TypeChecker.checkAtom(ch, Kernel.char_question_, "char", "char-lower-case?");
+  
 	return Kernel.char_dash_alphabetic_question_(ch) && Kernel.equal_question_(ch, Kernel.char_dash_downcase(ch));
   },
   
   char_dash_numeric_question_ : function(ch){
+  org.plt.TypeChecker.checkAtom(ch, Kernel.char_question_, "char", "char-numeric?");
+  
 	var str = ch.val.toString();
 	return (str >= "0" && str <= "9");
   },
   
   char_dash_upcase : function(ch){
+  org.plt.TypeChecker.checkAtom(ch, Kernel.char_question_, "char", "char-upcase");
+  
 	var up = ch.val.toString().toUpperCase();
 	return org.plt.types.Char.makeInstance(up);
   },
   
   char_dash_upper_dash_case_question_ : function(ch){
+  org.plt.TypeChecker.checkAtom(ch, Kernel.char_question_, "char", "char-upper-case?");
+  
 	return Kernel.char_dash_alphabetic_question_(ch) && Kernel.equal_question_(ch, Kernel.char_dash_upcase(ch));
   },
   
   char_dash_whitespace_question_ : function(ch){
+  org.plt.TypeChecker.checkAtom(ch, Kernel.char_question_, "char", "char-whitespace?");
+  
 	return Kernel.equal_question_(ch, org.plt.types.Char.makeInstance(" "));
   },
   
   list_dash__greaterthan_string : function(lst){
+  org.plt.TypeChecker.checkListType(lst, Kernel.char_question_, "char", "list->string");
+  
 	var ret = "";
 	while (!lst.isEmpty()){
 		ret += lst.first().val.toString();
@@ -800,6 +1133,9 @@ org.plt = {};
   },
   
   make_dash_string : function(n, ch){
+  org.plt.TypeChecker.checkAtomN(n, function(y){return Kernel.integer_question_(y) && !Kernel.negative_question_(y);}, "natural number", "make-string", 1);
+  org.plt.TypeChecker.checkAtomN(ch, Kernel.char_question_, "char", "make-string");
+  
 	var ret = "";
 	var c = ch.val.toString();
 	var i = org.plt.types.Rational.ZERO;
@@ -809,6 +1145,8 @@ org.plt = {};
   },
   
   string_dash__greaterthan_list : function(str){
+  org.plt.TypeChecker.checkAtomN(str, Kernel.string_question_, "string", "string->list");
+  
 	var s = str.toString();
 	var ret = org.plt.types.Empty.EMPTY;
 	for (var i = s.length - 1; i >= 0; i--){
@@ -822,6 +1160,8 @@ org.plt = {};
   },
   
   equal_tilde__question_ : function(x, y, delta){
+ org.plt.TypeChecker.checkAtomN(delta, function(x){return Kernel.real_question_(x) && !Kernel.negative_question_(x);}, "non-negative real number", "equal~?", 3);
+  
 	if (Kernel.real_question_(x) && Kernel.real_question_(y))
 		return Kernel._equal__tilde_(x, y, delta);
 	return Kernel.equal_question_(x, y);
@@ -836,6 +1176,8 @@ org.plt = {};
   },
   
   exact_question_ : function(x){
+  org.plt.TypeChecker.checkAtom(x, Kernel.number_question_, "number", "exact?");
+  
 	if (Kernel.rational_question_(x))
 		return true;
 	if (Kernel.complex_question_(x) && Kernel.rational_question_(Kernel.real_dash_part(x)) && Kernel.rational_question_(Kernel.imag_dash_part(x)))
@@ -844,10 +1186,14 @@ org.plt = {};
   },
  
   inexact_question_ : function(x){
+  org.plt.TypeChecker.checkAtom(x, Kernel.number_question_, "number", "inexact?");
+  
 	return !(Kernel.exact_question_(x));
   },
   
   exact_dash__greaterthan_inexact : function(x){
+  org.plt.TypeChecker.checkAtom(x, Kernel.number_question_, "number", "exact->inexact");
+  
 	if (Kernel.inexact_question_(x))
 		return x;
 	// if x is a complex, then both its real part and imagine part are not rational
@@ -856,6 +1202,8 @@ org.plt = {};
   },
   
   inexact_dash__greaterthan_exact : function(x){
+  org.plt.TypeChecker.checkAtom(x, Kernel.number_question_, "number", "inexact->exact");
+  
 	if (Kernel.exact_question_(x))
 		return x;
 	if (x instanceof org.plt.types.Rational)
@@ -863,6 +1211,10 @@ org.plt = {};
   },
   
   gcd : function(first, second, rest){
+  org.plt.TypeChecker.checkAtomN(first, Kernel.integer_question_, "integer", "gcd", 1);
+  org.plt.TypeChecker.checkAtomN(second, Kernel.integer_question_, "integer", "gcd", 2);
+  org.plt.TypeChecker.checkArrayTypeN(rest, Kernel.integer_question_, "integer", "gcd", 3);
+  
 	var ret = gcd(first.toInteger(), second.toInteger());
 	var i = 0;
 	for (; i < rest.length; i++)
@@ -871,6 +1223,10 @@ org.plt = {};
   },
   
   lcm : function(first, second, rest){
+  org.plt.TypeChecker.checkAtomN(first, Kernel.integer_question_, "integer", "lcm", 1);
+  org.plt.TypeChecker.checkAtomN(second, Kernel.integer_question_, "integer", "lcm", 2);
+  org.plt.TypeChecker.checkArrayTypeN(rest, Kernel.integer_question_, "integer", "lcm", 3);
+  
 	var ret = lcm(first.toInteger(), second.toInteger());
 	var i = 0;
 	for (; i < rest.length; i++)
@@ -1646,11 +2002,49 @@ org.plt = {};
 	org.plt.types.Complex.prototype.half = function(){
 		return org.plt.types.Complex.makeInstance(this.r.n/2, this.i.n/2);
 	};
- 
+	
+	//////////////////////////////////////////////////////////////////////
+	// Type Checker.
+	//////////////////////////////////////////////////////////////////////
+	org.plt.TypeChecker = {};
+	
+	org.plt.TypeChecker.checkAtom = function(checkee, checker, typeName, funName){
+		if (!checker(checkee))
+			throw new Error(funName + ": expect argument of type<" + typeName + ">; given " + checkee.toString());
+	};
+	
+	org.plt.TypeChecker.checkAtomN = function(checkee, checker, typeName, funName, argNum){
+		if (!checker(checkee))
+			throw new Error(funName + ": expect argument number " + argNum + " of type<" + typeName + ">; given " + checkee.toString());
+	};
+	
+	org.plt.TypeChecker.checkArrayType = function(checkee, checker, typeName, funName){
+		for (var i = 0; i < checkee.length; i++)
+			if (!checker(checkee[i]))
+				throw new Error(funName + ": expect argument of type array<" + typeName + ">; its " + i + "th element is " + checkee[i].toString());
+	};
+	
+	org.plt.TypeChecker.checkArrayTypeN = function(checkee, checker, typeName, funName, argNum){
+		for (var i = 0; i < checkee.length; i++)
+			if (!checker(checkee[i]))
+				throw new Error(funName + ": expect argument number " + argNum + " of type array<" + typeName + ">; its " + i + "th element is " + checkee[i].toString());
+	};
+	
+	org.plt.TypeChecker.checkListType = function(checkee, checker, typeName, funName){
+		for (; !Kernel.empty_question_(checkee); checkee = checkee.rest())
+			if (!checker(checkee.first()))
+				throw new Error(funName + ": expect argument of type list<" + typeName + ">; found element to be " + checkee.first().toString());
+	};
+	
+	org.plt.TypeChecker.checkListTypeN = function(checkee, checker, typeName, funName, argNum){
+		for (; !Kernel.empty_question_(checkee); checkee = checkee.rest())
+			if (!checker(checkee.first()))
+				throw new Error(funName + ": expect argument number " + argNum + " of type list<" + typeName + ">; found element to be " + checkee.first().toString());
+	};
+	 
     //////////////////////////////////////////////////////////////////////
     // NumberTower.
     // 
-    // Currently only support Rational and Floating.
     org.plt.types.NumberTower = {};
  
  
