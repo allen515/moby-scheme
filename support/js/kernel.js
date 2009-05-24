@@ -878,6 +878,11 @@ org.plt = {};
 	return org.plt.types.Rational.makeInstance(ret, 1);
   },
   
+  current_dash_seconds : function(){
+	var curTime = new Date();
+	return org.plt.types.Rational.makeInstance(curTime.getSeconds(), 1);
+  },
+  
   HEREEEEEEEEEEEEEEEEE : function(){}
 	
   };

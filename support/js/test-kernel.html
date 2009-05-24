@@ -900,6 +900,14 @@
 	
 		this.assert(Kernel.equal_question_(Kernel.lcm(n2, n3, []), n6));
 		this.assert(Kernel.equal_question_(Kernel.lcm(n2, n3, [n4]), n12));
+	},
+	
+	testCurrent_dash_seconds : function(){
+		var s1 = Kernel.current_dash_seconds();
+		var s2 = Kernel.current_dash_seconds();
+		
+		if (Kernel._lessthan_(s2, FloatPoint.makeInstance(60), []))
+			this.assert(Kernel._lessthan_(s1, FloatPoint.makeInstance(60), []));
 	}
 	
   }); 
