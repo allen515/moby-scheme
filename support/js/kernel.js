@@ -1239,6 +1239,46 @@ org.plt = {};
 	return org.plt.types.Rational.makeInstance(curTime.getSeconds(), 1);
   },
   
+  format : function(str, args){
+	org.plt.TypeChecker.checkAtomN(str, Kernel.string_question_, "string", "format", 1);
+  
+	// make sure the number of arguments match the number of parameters
+	var n_req = (str.toString().split("~a").length - 1) + (str.toString().split("~s").length - 1);
+	if (n_req != args.length){
+		var mes = "format requires " + n_req + " arguments; given ";
+		for (var i = 0; i < args.length; i++)
+		mes += args[i].toString() + " ";
+		throw new Error(mes);
+	}
+	
+	str = str.toString();
+	
+	// begin formatting
+	var matchRet;
+	var i;
+	var arg = 0;
+	var ret = "";
+	while ((matchRet = str.match("~")) != null){
+		i = matchRet.index;
+		ret += str.substring(0, i);
+		var ch = str.charAt(i + 1);
+		switch(ch){
+			case "n":
+				ret += "\n";
+				break;
+			case "a":
+				ret += args[arg++].toString();
+				break;
+			case "s":
+				ret += "\"" + args[arg++].toString() + "\"";
+		}
+		str = str.substring(i+2);
+	}
+	// here str does not contain "~x"
+	ret += str;
+	return org.plt.types.String.makeInstance(ret);
+  },
+  
   HEREEEEEEEEEEEEEEEEE : function(){}
 	
   };

@@ -923,6 +923,14 @@
 			this.assert(Kernel._lessthan_(s1, FloatPoint.makeInstance(60), []));
 	}, 
 	
+	testFormat : function(){
+		var zhang = String.makeInstance("zhang");
+		var zhe = String.makeInstance("zhe");
+		this.assert(Kernel.equal_question_(Kernel.format(String.makeInstance("hello ~a, hi ~a"), [zhang, zhe]), String.makeInstance("hello zhang, hi zhe")));
+		this.assert(Kernel.equal_question_(Kernel.format(String.makeInstance("hello ~a, hi ~s"), [zhang, zhe]), String.makeInstance("hello zhang, hi \"zhe\"")));
+		this.assert(Kernel.equal_question_(Kernel.format(String.makeInstance("hello ~a, hi ~n"), [zhang]), String.makeInstance("hello zhang, hi \n")));
+	},
+	
   }); 
   
 // ]]>
